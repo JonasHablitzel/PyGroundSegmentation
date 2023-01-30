@@ -1,3 +1,7 @@
+# OWn FIles to exclude 
+mytests/
+test/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

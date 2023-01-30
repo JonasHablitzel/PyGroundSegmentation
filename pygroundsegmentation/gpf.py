@@ -1,6 +1,7 @@
 import numpy as np
 import numpy.typing as npt
-from .utils import sort_pcl_by_height, NDArrayFloat
+from typing import Tuple
+from .utils import sort_pcl_by_height, NDArrayFloat64, NDArrayFloat32, NDArrayBool
 
 np.set_printoptions(suppress=True)
 
@@ -25,7 +26,7 @@ class GroundPlaneFitting:
         self._sensor_height = sensor_height
         self._sensor_height_factor = sensor_height_factor
 
-    def _extract_initial_seeds(self, pointcloud: NDArrayFloat) -> NDArrayFloat:
+    def _extract_initial_seeds(self, pointcloud: NDArrayFloat32) -> NDArrayFloat32:
 
         # mean height value
         lpr_height = pointcloud[: self._num_lpr, 2].mean()
@@ -35,7 +36,9 @@ class GroundPlaneFitting:
         seed_pc = pointcloud[filter_func]
         return seed_pc
 
-    def _estimatePlane(self, ground_pcl: NDArrayFloat) -> (NDArrayFloat, float):
+    def _estimatePlane(
+        self, ground_pcl: NDArrayFloat32
+    ) -> Tuple[NDArrayFloat64, float]:
         cov_matrix = np.cov(ground_pcl[:, :3], rowvar=False)
         pcl_mean = np.mean(ground_pcl[:, :3], axis=0)
         u, _, _ = np.linalg.svd(cov_matrix, full_matrices=True)
@@ -48,7 +51,7 @@ class GroundPlaneFitting:
 
         return normal_n, th_dist_d
 
-    def _error_point_removel(self, pointcloud: NDArrayFloat) -> NDArrayFloat:
+    def _error_point_removel(self, pointcloud: NDArrayFloat32) -> NDArrayFloat32:
         # Negative outlier error point removal.
         # As there might be some error mirror reflection under the ground
         # We define the outlier threshold times the height of the LiDAR sensor
@@ -57,7 +60,7 @@ class GroundPlaneFitting:
         )
         return pointcloud[filer_func]
 
-    def estimate_ground(self, pointcloud: NDArrayFloat) -> NDArrayFloat:
+    def estimate_ground(self, pointcloud: NDArrayFloat32) -> NDArrayBool:
 
         sorted_pcl = sort_pcl_by_height(pointcloud)
         cleaned_pcl = self._error_point_removel(sorted_pcl)

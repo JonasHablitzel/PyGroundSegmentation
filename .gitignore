@@ -1,6 +1,7 @@
 # OWn FIles to exclude 
 mytests/
 test/
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

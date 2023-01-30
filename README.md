@@ -18,7 +18,7 @@ pip install pygroundsegmentation
 ```python
 from pygroundsegmentation import GroundPlaneFitting
 
-ground_estimator = GroundPlaneFitting() #Instantiate one of Groundestimators
+ground_estimator = GroundPlaneFitting() #Instantiate one of the Estimators
 
 xyz_pointcloud = np.random.rand(1000,3) #Example Pointcloud
 ground_idxs = ground_estimator.estimate_ground(xyz_pointcloud)

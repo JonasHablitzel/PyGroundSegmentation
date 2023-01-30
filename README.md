@@ -1,6 +1,6 @@
 # PyGroundSegmentation
 
-This libary includes some ground segmentation algorithems rewritten in python. There are no external C or C++ dependencies only pure python (numpy)
+This libary includes some **ground segmentation algorithms** rewritten in python. There are no external C or C++ dependencies only pure python (numpy).
 
 # Installation
 
@@ -8,10 +8,12 @@ This libary includes some ground segmentation algorithems rewritten in python. T
 pip install pygroundsegmentation
 ```
 
-## Included Algorithems
+## Included Algorithms
 
 - [x] [GPF](https://github.com/VincentCheungM/Run_based_segmentation) (Ground Plane Fitting)
-- [ ] [Patchwork](https://github.com/LimHyungTae/patchwork) (ver.1)
+- [ ] [Patchwork-plusplus](https://github.com/url-kaist/patchwork-plusplus)
+- [ ] [Patchwork](https://github.com/LimHyungTae/patchwork)
+- [ ] [CascadedSeg](https://github.com/n-patiphon/cascaded_ground_seg)
 
 ## Example Usage
 

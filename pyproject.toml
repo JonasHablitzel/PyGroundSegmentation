@@ -8,7 +8,7 @@ readme = "README.md"
 repository = "https://github.com/JonasHablitzel/PyGroundSegmentation"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 numpy = "^1.24.1"
 
 [tool.poetry.dev-dependencies]
@@ -16,6 +16,19 @@ pytest = "^7.2.1"
 mypy = "^0.991"
 pylint = "^2.15.10"
 black = "^22.12.0"
+
+[tool.poetry.group.dev.dependencies]
+jupyter = "^1.0.0"
+jupyterlab = "^4.0.9"
+pypcd = "^0.1.1"
+pypcd3 = "^0.1.1"
+matplotlib = "^3.8.2"
+pypatchworkpp = {path = "../patchwork-plusplus/pypatchworkpp-0.0.1-cp310-cp310-manylinux_2_35_x86_64.whl"}
+shapely = "^2.0.2"
+ruff = "^0.1.9"
+
+[tool.ruff]
+line-length = 88
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

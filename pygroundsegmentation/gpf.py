@@ -1,7 +1,13 @@
 import numpy as np
 import numpy.typing as npt
 from typing import Tuple
-from .utils import sort_pcl_by_height, NDArrayFloat64, NDArrayFloat32, NDArrayBool
+from .utils import (
+    sort_pcl_by_height,
+    NDArrayFloat64,
+    NDArrayFloat32,
+    NDArrayBool,
+    estimate_plane,
+)
 
 np.set_printoptions(suppress=True)
 
@@ -17,7 +23,6 @@ class GroundPlaneFitting:
         sensor_height: float = 2.0,
         sensor_height_factor: float = -1.5,
     ):
-
         self._num_seg = num_seg
         self._num_iter = num_iter
         self._num_lpr = num_lpr
@@ -27,7 +32,6 @@ class GroundPlaneFitting:
         self._sensor_height_factor = sensor_height_factor
 
     def _extract_initial_seeds(self, pointcloud: NDArrayFloat32) -> NDArrayFloat32:
-
         # mean height value
         lpr_height = pointcloud[: self._num_lpr, 2].mean()
 
@@ -35,21 +39,6 @@ class GroundPlaneFitting:
         filter_func = pointcloud[:, 2] < lpr_height + self._th_seeds
         seed_pc = pointcloud[filter_func]
         return seed_pc
-
-    def _estimatePlane(
-        self, ground_pcl: NDArrayFloat32
-    ) -> Tuple[NDArrayFloat64, float]:
-        cov_matrix = np.cov(ground_pcl[:, :3], rowvar=False)
-        pcl_mean = np.mean(ground_pcl[:, :3], axis=0)
-        u, _, _ = np.linalg.svd(cov_matrix, full_matrices=True)
-
-        normal_n = u[:, 2]
-
-        d = -1 * np.inner(normal_n, pcl_mean)
-
-        th_dist_d = self._th_dist - d
-
-        return normal_n, th_dist_d
 
     def _error_point_removel(self, pointcloud: NDArrayFloat32) -> NDArrayFloat32:
         # Negative outlier error point removal.
@@ -61,6 +50,9 @@ class GroundPlaneFitting:
         return pointcloud[filer_func]
 
     def estimate_ground(self, pointcloud: NDArrayFloat32) -> NDArrayBool:
+        assert (
+            pointcloud.dtype == np.float32
+        ), f"Only arrays with type float32 are supported, we got {pointcloud.dtype}"
 
         sorted_pcl = sort_pcl_by_height(pointcloud)
         cleaned_pcl = self._error_point_removel(sorted_pcl)
@@ -71,7 +63,7 @@ class GroundPlaneFitting:
         ground_pcl = seed_pcl
 
         for idx in range(self._num_iter):
-            normal_n, th_dist_d = self._estimatePlane(ground_pcl)
+            normal_n, th_dist_d = estimate_plane(ground_pcl, self._th_dist)
             # print(normal_n, th_dist_d)
 
             # Ground plane model
